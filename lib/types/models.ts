@@ -6,4 +6,6 @@ export interface Model {
   enabled: boolean
   toolCallType: 'native' | 'manual'
   toolCallModel?: string
+  category?: 'Speed' | 'Quality' | 'Reasoning' | 'Linguistic'
+  description?: string
 }

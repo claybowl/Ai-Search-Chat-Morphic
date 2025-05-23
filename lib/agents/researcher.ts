@@ -1,4 +1,5 @@
 import { CoreMessage, smoothStream, streamText } from 'ai'
+import { CUSTOM_BASE_INSTRUCTIONS } from '../config/system-prompts'
 import { createQuestionTool } from '../tools/question'
 import { retrieveTool } from '../tools/retrieve'
 import { createSearchTool } from '../tools/search'
@@ -6,6 +7,7 @@ import { createVideoSearchTool } from '../tools/video-search'
 import { getModel } from '../utils/registry'
 
 const SYSTEM_PROMPT = `
+${CUSTOM_BASE_INSTRUCTIONS}
 Instructions:
 
 You are a helpful AI assistant with access to real-time web search, content retrieval, video search capabilities, and the ability to ask clarifying questions.

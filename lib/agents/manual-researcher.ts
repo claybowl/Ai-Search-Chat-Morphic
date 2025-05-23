@@ -1,7 +1,9 @@
 import { CoreMessage, smoothStream, streamText } from 'ai'
+import { CUSTOM_BASE_INSTRUCTIONS } from '../config/system-prompts'
 import { getModel } from '../utils/registry'
 
 const BASE_SYSTEM_PROMPT = `
+${CUSTOM_BASE_INSTRUCTIONS}
 Instructions:
 
 You are a helpful AI assistant providing accurate information.

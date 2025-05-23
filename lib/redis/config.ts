@@ -201,9 +201,152 @@ class LocalPipelineWrapper {
 }
 
 // Function to get a Redis client
+// Memory-based implementation for when Redis is not available
+class MemoryRedisWrapper extends RedisWrapper {
+  private storage: Map<string, any> = new Map();
+  private sortedSets: Map<string, Map<string, number>> = new Map();
+
+  constructor() {
+    // Using 'any' as a placeholder since we don't have a real Redis client
+    super({} as any);
+  }
+
+  async zrange(
+    key: string,
+    start: number,
+    stop: number,
+    options?: { rev: boolean }
+  ): Promise<string[]> {
+    const set = this.sortedSets.get(key) || new Map();
+    const entries = [...set.entries()];
+    
+    // Sort by score
+    entries.sort((a, b) => options?.rev ? b[1] - a[1] : a[1] - b[1]);
+    
+    // Extract members based on start/stop indices
+    const actualStop = stop === -1 ? entries.length - 1 : stop;
+    return entries.slice(start, actualStop + 1).map(([member]) => member);
+  }
+
+  async hgetall<T extends Record<string, unknown>>(
+    key: string
+  ): Promise<T | null> {
+    return (this.storage.get(key) as T) || null;
+  }
+
+  pipeline() {
+    return new MemoryPipelineWrapper(this);
+  }
+
+  async hmset(key: string, value: Record<string, any>): Promise<'OK' | number> {
+    this.storage.set(key, value);
+    return 'OK';
+  }
+
+  async zadd(
+    key: string,
+    score: number,
+    member: string
+  ): Promise<number | null> {
+    if (!this.sortedSets.has(key)) {
+      this.sortedSets.set(key, new Map());
+    }
+    const set = this.sortedSets.get(key)!;
+    const isNew = !set.has(member);
+    set.set(member, score);
+    return isNew ? 1 : 0;
+  }
+
+  async del(key: string): Promise<number> {
+    const existed = this.storage.has(key);
+    this.storage.delete(key);
+    this.sortedSets.delete(key);
+    return existed ? 1 : 0;
+  }
+
+  async zrem(key: string, member: string): Promise<number> {
+    const set = this.sortedSets.get(key);
+    if (!set || !set.has(member)) return 0;
+    set.delete(member);
+    return 1;
+  }
+
+  async close(): Promise<void> {
+    // No-op for memory implementation
+  }
+}
+
+class MemoryPipelineWrapper {
+  private operations: { op: string; args: any[] }[] = [];
+  private wrapper: MemoryRedisWrapper;
+
+  constructor(wrapper: MemoryRedisWrapper) {
+    this.wrapper = wrapper;
+  }
+
+  hgetall(key: string) {
+    this.operations.push({ op: 'hgetall', args: [key] });
+    return this;
+  }
+
+  del(key: string) {
+    this.operations.push({ op: 'del', args: [key] });
+    return this;
+  }
+
+  zrem(key: string, member: string) {
+    this.operations.push({ op: 'zrem', args: [key, member] });
+    return this;
+  }
+
+  hmset(key: string, value: Record<string, any>) {
+    this.operations.push({ op: 'hmset', args: [key, value] });
+    return this;
+  }
+
+  zadd(key: string, score: number, member: string) {
+    this.operations.push({ op: 'zadd', args: [key, score, member] });
+    return this;
+  }
+
+  async exec() {
+    const results = [];
+    for (const op of this.operations) {
+      switch (op.op) {
+        case 'hgetall':
+          results.push(await this.wrapper.hgetall(op.args[0]));
+          break;
+        case 'del':
+          results.push(await this.wrapper.del(op.args[0]));
+          break;
+        case 'zrem':
+          results.push(await this.wrapper.zrem(op.args[0], op.args[1]));
+          break;
+        case 'hmset':
+          results.push(await this.wrapper.hmset(op.args[0], op.args[1]));
+          break;
+        case 'zadd':
+          results.push(await this.wrapper.zadd(op.args[0], op.args[1], op.args[2]));
+          break;
+      }
+    }
+    return results;
+  }
+}
+
 export async function getRedisClient(): Promise<RedisWrapper> {
   if (redisWrapper) {
     return redisWrapper
+  }
+
+  // Check if Redis is configured
+  const isRedisConfigured = redisConfig.useLocalRedis || 
+    (redisConfig.upstashRedisRestUrl && redisConfig.upstashRedisRestToken);
+
+  if (!isRedisConfigured) {
+    console.warn("Redis is not configured. Using in-memory storage for chat history (will be lost on server restart).");
+    redisWrapper = new MemoryRedisWrapper();
+    return redisWrapper;
   }
 
   if (redisConfig.useLocalRedis) {
@@ -239,26 +382,18 @@ export async function getRedisClient(): Promise<RedisWrapper> {
             error
           )
         }
-        throw new Error(
-          'Failed to connect to local Redis. Check your configuration and ensure Redis is running.'
-        )
+        console.warn("Falling back to in-memory storage for chat history.");
+        redisWrapper = new MemoryRedisWrapper();
+        return redisWrapper;
       }
     }
     redisWrapper = new RedisWrapper(localRedisClient)
   } else {
-    if (
-      !redisConfig.upstashRedisRestUrl ||
-      !redisConfig.upstashRedisRestToken
-    ) {
-      throw new Error(
-        'Upstash Redis configuration is missing. Please check your environment variables.'
-      )
-    }
     try {
       redisWrapper = new RedisWrapper(
         new Redis({
-          url: redisConfig.upstashRedisRestUrl,
-          token: redisConfig.upstashRedisRestToken
+          url: redisConfig.upstashRedisRestUrl!,
+          token: redisConfig.upstashRedisRestToken!
         })
       )
     } catch (error) {
@@ -280,9 +415,9 @@ export async function getRedisClient(): Promise<RedisWrapper> {
           error
         )
       }
-      throw new Error(
-        'Failed to connect to Upstash Redis. Check your configuration and credentials.'
-      )
+      console.warn("Falling back to in-memory storage for chat history.");
+      redisWrapper = new MemoryRedisWrapper();
+      return redisWrapper;
     }
   }
 

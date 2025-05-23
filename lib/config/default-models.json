@@ -1,52 +1,24 @@
 {
   "models": [
     {
-      "id": "gpt-4.1",
-      "name": "GPT-4.1",
-      "provider": "OpenAI",
-      "providerId": "openai",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
-      "id": "gpt-4.1-mini",
-      "name": "GPT-4.1 mini",
-      "provider": "OpenAI",
-      "providerId": "openai",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
-      "id": "gpt-4.1-nano",
-      "name": "GPT-4.1 nano",
-      "provider": "OpenAI",
-      "providerId": "openai",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
-      "id": "o3-mini",
-      "name": "o3 mini",
-      "provider": "OpenAI",
-      "providerId": "openai",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
-      "id": "gpt-4o",
-      "name": "GPT-4o",
-      "provider": "OpenAI",
-      "providerId": "openai",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
       "id": "gpt-4o-mini",
       "name": "GPT-4o mini",
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "category": "Speed",
+      "description": "Snappy responses with impressive capabilities."
+    },
+    {
+      "id": "gpt-4.1",
+      "name": "GPT-4.1",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "enabled": true,
+      "toolCallType": "native",
+      "category": "Quality",
+      "description": "High quality for complex tasks."
     },
     {
       "id": "claude-3-7-sonnet-20250219",
@@ -54,15 +26,19 @@
       "provider": "Anthropic",
       "providerId": "anthropic",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "category": "Quality",
+      "description": "High quality with understanding."
     },
     {
-      "id": "claude-3-5-sonnet-latest",
-      "name": "Claude 3.5 Sonnet",
-      "provider": "Anthropic",
-      "providerId": "anthropic",
+      "id": "o3-mini",
+      "name": "o3 mini",
+      "provider": "OpenAI",
+      "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "category": "Reasoning",
+      "description": "Strong reasoning and problem-solving."
     },
     {
       "id": "claude-3-5-haiku-20241022",
@@ -70,127 +46,50 @@
       "provider": "Anthropic",
       "providerId": "anthropic",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "category": "Speed",
+      "description": "Fast responses with good accuracy."
     },
     {
-      "id": "<AZURE_DEPLOYMENT_NAME>",
-      "name": "<AZURE_DEPLOYMENT_NAME>",
-      "provider": "Azure",
-      "providerId": "azure",
+      "id": "gpt-4o",
+      "name": "GPT-4o",
+      "provider": "OpenAI",
+      "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "category": "Quality",
+      "description": "Comprehensive knowledge and capabilities."
     },
     {
-      "id": "gemini-2.0-flash",
+      "id": "claude-3-5-sonnet-latest",
+      "name": "Claude 3.5 Sonnet",
+      "provider": "Anthropic",
+      "providerId": "anthropic",
+      "enabled": true,
+      "toolCallType": "native",
+      "category": "Linguistic",
+      "description": "Excellent for nuanced language tasks."
+    },
+    {
+      "id": "gemini-2-0-flash",
       "name": "Gemini 2.0 Flash",
       "provider": "Google Generative AI",
       "providerId": "google",
       "enabled": true,
-      "toolCallType": "manual"
+      "toolCallType": "manual",
+      "category": "Speed",
+      "description": "Quick responses with good quality."
     },
     {
-      "id": "gemini-2.0-flash-thinking-exp-01-21",
-      "name": "Gemini 2.0 Flash Thinking (Exp)",
+      "id": "gemini-2-5-pro-exp-03-25",
+      "name": "Gemini 2.5 Pro",
       "provider": "Google Generative AI",
       "providerId": "google",
       "enabled": true,
       "toolCallType": "manual",
-      "toolCallModel": "gemini-2.0-flash"
-    },
-    {
-      "id": "gemini-2.5-pro-exp-03-25",
-      "name": "Gemini 2.5 Pro (Exp)",
-      "provider": "Google Generative AI",
-      "providerId": "google",
-      "enabled": true,
-      "toolCallType": "manual",
-      "toolCallModel": "gemini-2.0-flash"
-    },
-    {
-      "id": "accounts/fireworks/models/deepseek-r1",
-      "name": "DeepSeek R1",
-      "provider": "Fireworks",
-      "providerId": "fireworks",
-      "enabled": true,
-      "toolCallType": "manual",
-      "toolCallModel": "accounts/fireworks/models/llama-v3p1-8b-instruct"
-    },
-    {
-      "id": "accounts/fireworks/models/llama4-maverick-instruct-basic",
-      "name": "Llama 4 Maverick",
-      "provider": "Fireworks",
-      "providerId": "fireworks",
-      "enabled": true,
-      "toolCallType": "manual",
-      "toolCallModel": "accounts/fireworks/models/llama-v3p1-8b-instruct"
-    },
-    {
-      "id": "deepseek-reasoner",
-      "name": "DeepSeek R1",
-      "provider": "DeepSeek",
-      "providerId": "deepseek",
-      "enabled": true,
-      "toolCallType": "manual",
-      "toolCallModel": "deepseek-chat"
-    },
-    {
-      "id": "deepseek-chat",
-      "name": "DeepSeek V3",
-      "provider": "DeepSeek",
-      "providerId": "deepseek",
-      "enabled": true,
-      "toolCallType": "manual"
-    },
-    {
-      "id": "deepseek-r1-distill-llama-70b",
-      "name": "DeepSeek R1 Distill Llama 70B",
-      "provider": "Groq",
-      "providerId": "groq",
-      "enabled": true,
-      "toolCallType": "manual",
-      "toolCallModel": "llama-3.1-8b-instant"
-    },
-    {
-      "id": "meta-llama/llama-4-maverick-17b-128e-instruct",
-      "name": "Llama 4 Maverick 17B",
-      "provider": "Groq",
-      "providerId": "groq",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
-      "id": "deepseek-r1",
-      "name": "DeepSeek R1",
-      "provider": "Ollama",
-      "providerId": "ollama",
-      "enabled": true,
-      "toolCallType": "manual",
-      "toolCallModel": "phi4"
-    },
-    {
-      "id": "<OLLAMA_MODEL_ID>",
-      "name": "<OLLAMA_MODEL_NAME>",
-      "provider": "Ollama",
-      "providerId": "ollama",
-      "enabled": true,
-      "toolCallType": "manual",
-      "toolCallModel": "<OLLAMA_MODEL_ID>"
-    },
-    {
-      "id": "grok-2-1212",
-      "name": "Grok 2",
-      "provider": "xAI",
-      "providerId": "xai",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
-      "id": "grok-2-vision-1212",
-      "name": "Grok 2 Vision",
-      "provider": "xAI",
-      "providerId": "xai",
-      "enabled": true,
-      "toolCallType": "native"
+      "toolCallModel": "gemini-2-0-flash",
+      "category": "Reasoning",
+      "description": "Advanced reasoning capabilities."
     },
     {
       "id": "grok-3-beta",
@@ -198,15 +97,9 @@
       "provider": "xAI",
       "providerId": "xai",
       "enabled": true,
-      "toolCallType": "native"
-    },
-    {
-      "id": "<OPENAI_COMPATIBLE_MODEL>",
-      "name": "<OPENAI_COMPATIBLE_MODEL>",
-      "provider": "OpenAI Compatible",
-      "providerId": "openai-compatible",
-      "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "category": "Linguistic",
+      "description": "Advanced language understanding."
     }
   ]
 }

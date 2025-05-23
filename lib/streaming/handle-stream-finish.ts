@@ -68,24 +68,26 @@ export async function handleStreamFinish({
       return
     }
 
-    // Get the chat from the database if it exists, otherwise create a new one
-    const savedChat = (await getChat(chatId)) ?? {
-      messages: [],
-      createdAt: new Date(),
-      userId: 'anonymous',
-      path: `/search/${chatId}`,
-      title: originalMessages[0].content,
-      id: chatId
-    }
+    try {
+      // Get the chat from the database if it exists, otherwise create a new one
+      const savedChat = (await getChat(chatId)) ?? {
+        messages: [],
+        createdAt: new Date(),
+        userId: 'anonymous',
+        path: `/search/${chatId}`,
+        title: originalMessages[0].content,
+        id: chatId
+      }
 
-    // Save chat with complete response and related questions
-    await saveChat({
-      ...savedChat,
-      messages: generatedMessages
-    }).catch(error => {
-      console.error('Failed to save chat:', error)
-      throw new Error('Failed to save chat history')
-    })
+      // Save chat with complete response and related questions
+      await saveChat({
+        ...savedChat,
+        messages: generatedMessages
+      })
+    } catch (error) {
+      // Log error but don't throw - this prevents chat from failing if Redis isn't available
+      console.error('Failed to save chat history:', error)
+    }
   } catch (error) {
     console.error('Error in handleStreamFinish:', error)
     throw error

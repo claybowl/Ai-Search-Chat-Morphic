@@ -2,8 +2,9 @@
 
 import { cn } from '@/lib/utils'
 import { getCookie, setCookie } from '@/lib/utils/cookies'
-import { Globe } from 'lucide-react'
+import { Globe, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Button } from './ui/button'
 import { Toggle } from './ui/toggle'
 
 export function SearchModeToggle() {
@@ -22,21 +23,17 @@ export function SearchModeToggle() {
   }
 
   return (
-    <Toggle
-      aria-label="Toggle search mode"
-      pressed={isSearchMode}
-      onPressedChange={handleSearchModeChange}
+    <Button
       variant="outline"
+      size="sm"
       className={cn(
-        'gap-1 px-3 border border-input text-muted-foreground bg-background',
-        'data-[state=on]:bg-accent-blue',
-        'data-[state=on]:text-accent-blue-foreground',
-        'data-[state=on]:border-accent-blue-border',
-        'hover:bg-accent hover:text-accent-foreground rounded-full'
+        'text-sm rounded-full shadow-none focus:ring-0 flex items-center gap-1',
+        isSearchMode && 'bg-accent-blue text-accent-blue-foreground border-accent-blue-border'
       )}
+      onClick={() => handleSearchModeChange(!isSearchMode)}
     >
-      <Globe className="size-4" />
+      <Search className="h-4 w-4" />
       <span className="text-xs">Search</span>
-    </Toggle>
+    </Button>
   )
 }
