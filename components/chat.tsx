@@ -47,12 +47,6 @@ export function Chat({
     body: {
       id
     },
-    onFinish: () => {
-      router.replace(`/search/${id}`)
-      startTransition(() => {
-        router.refresh()
-      })
-    },
     onError: error => {
       toast.error(`Error in chat: ${error.message}`)
     },
