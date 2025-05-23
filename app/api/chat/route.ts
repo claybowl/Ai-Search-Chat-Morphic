@@ -18,6 +18,12 @@ const DEFAULT_MODEL: Model = {
 export async function POST(req: Request) {
   try {
     const { messages, id: chatId } = await req.json()
+    console.log('🚀 API called:', { 
+      chatId, 
+      messageCount: messages?.length, 
+      lastMessage: messages?.[messages.length - 1]?.content,
+      timestamp: new Date().toISOString()
+    })
     const referer = req.headers.get('referer')
     const isSharePage = referer?.includes('/share/')
 

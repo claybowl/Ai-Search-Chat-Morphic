@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Test</title>
+</head>
+<body>
+    <h1>Chat Functionality Test</h1>
+    <p>Visit <a href="http://localhost:3001" target="_blank">http://localhost:3001</a> to test the chat.</p>
+    
+    <h2>Test Steps:</h2>
+    <ol>
+        <li>Open the application in your browser</li>
+        <li>Type a simple message like "Hello, how are you?"</li>
+        <li>Press Enter or click the submit button</li>
+        <li>Verify that:
+            <ul>
+                <li>The message appears in the chat</li>
+                <li>The AI responds</li>
+                <li>The chat stays on the same page (no reset)</li>
+                <li>After completion, the chat appears in the left sidebar history</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h2>Key Fixes Applied:</h2>
+    <ul>
+        <li>✅ Fixed useChat hook to use dynamic chat ID instead of static 'search'</li>
+        <li>✅ Added explicit API route '/api/chat' to useChat configuration</li>
+        <li>✅ Removed page navigation/refresh on completion</li>
+        <li>✅ Configured chat history saving with ENABLE_SAVE_CHAT_HISTORY=true</li>
+        <li>✅ Verified API endpoint works (returns streaming responses)</li>
+    </ul>
+
+    <h2>Expected Behavior:</h2>
+    <p>When you submit a message, you should see the AI response streaming in real-time, and after completion, the conversation should remain visible without any page refresh or reset.</p>
+</body>
+</html>

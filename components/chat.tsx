@@ -1,10 +1,9 @@
 'use client'
 
-import { CHAT_ID } from '@/lib/constants'
 import { useAutoScroll } from '@/lib/hooks/use-auto-scroll'
 import { Model } from '@/lib/types/models'
 import { cn } from '@/lib/utils'
-import { useChat } from '@ai-sdk/react'
+import { useChat } from 'ai/react'
 import { ChatRequestOptions } from 'ai'
 import { Message } from 'ai/react'
 import { useRouter } from 'next/navigation'
@@ -42,15 +41,20 @@ export function Chat({
     addToolResult,
     reload
   } = useChat({
+    api: '/api/chat',
     initialMessages: savedMessages,
-    id: CHAT_ID,
+    id: id,
     body: {
       id
     },
+    onFinish: (message, { usage, finishReason }) => {
+      console.log('🎉 Chat finished:', { messageId: message.id, finishReason, usage })
+    },
     onError: error => {
+      console.error('❌ Chat error:', error)
       toast.error(`Error in chat: ${error.message}`)
     },
-    sendExtraMessageFields: false, // Disable extra message fields,
+    sendExtraMessageFields: false,
     experimental_throttle: 100
   })
 
@@ -66,7 +70,7 @@ export function Chat({
 
   useEffect(() => {
     setMessages(savedMessages)
-  }, [id])
+  }, [id, savedMessages, setMessages])
 
   const onQuerySelect = (query: string) => {
     append({
@@ -127,6 +131,14 @@ export function Chat({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    console.log('📤 Form submitting:', { 
+      input, 
+      inputLength: input.length,
+      messagesCount: messages.length, 
+      isLoading, 
+      status,
+      id 
+    })
     setData(undefined)
     handleSubmit(e)
   }
