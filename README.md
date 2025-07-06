@@ -1,4 +1,4 @@
-# Morphic
+# Amazon Listing Enhancer UI
 
 An AI-powered search engine with a generative UI.
 
